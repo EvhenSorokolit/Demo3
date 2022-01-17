@@ -14,7 +14,7 @@ resource "aws_lb" "my_lb" {
 # Crating  Target group
 resource "aws_lb_target_group" "my_tg" {
   name     = "${var.name}-Tg"
-  port     = 80
+  port     = var.port
   protocol = "HTTP"
   target_type = "ip"
   vpc_id   = var.vpc_id
@@ -22,7 +22,7 @@ resource "aws_lb_target_group" "my_tg" {
     healthy_threshold   = 2
     unhealthy_threshold = 2
     timeout             = 5
-    port                = "80"
+    port                = var.port
     path                = "/"
     protocol            = "HTTP"
     interval            = 6
@@ -33,7 +33,7 @@ resource "aws_lb_target_group" "my_tg" {
 # Crating Load balancer Listener
 resource "aws_lb_listener" "my_lb_listener" {
     load_balancer_arn = aws_lb.my_lb.arn
-    port = 80
+    port = var.port
     protocol = "HTTP"
     default_action {
       type ="forward"

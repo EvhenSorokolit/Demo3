@@ -3,7 +3,8 @@
 locals {
 
   app_name = "MyTestApp"
-  app_ports= ["80"]
+  sg_ports= ["80"]
+  app_port= "80"
   working_dir = ".//app"
   aws_region = "eu-central-1"
   image_tag = "3.7"
@@ -46,20 +47,21 @@ module "vpc" {
 module "SG" {
     source = "./modules//SG"
     vpc_id = module.vpc.vpc_id
-    allow_ports = local.app_ports
+    allow_ports = local.sg_ports
     name = local.app_name
     depends_on = [module.vpc]
       
     
 }
 
-#create Load Balancer . Depends  on network
+#create Load Balancer . Depends  on network and Security group
 module "ALB" {
     source = "./modules//alb"
     vpc_id = module.vpc.vpc_id
     subnetes = module.vpc.public_ips
     lb_sg_id= module.SG.sg_id
     name = local.app_name
+    port = local.app_port
     depends_on = [module.vpc,module.SG]
 }
 
@@ -73,6 +75,7 @@ module "ECS" {
     name = local.app_name 
     image = module.InitBuild.url 
     inst_number = local.count_avzones_instances
+    port = local.app_port
     
     depends_on = [module.ALB,module.InitBuild]  
 }

@@ -27,7 +27,7 @@ resource "aws_ecs_service" "test"{
     load_balancer {
       target_group_arn = var.ecs_tg
       container_name ="first"
-      container_port ="80"
+      container_port =var.port
     }
 
 }
@@ -65,8 +65,8 @@ resource "aws_ecs_task_definition" "main" {
    
    portMappings = [
         {
-          containerPort = 80
-          hostPort      = 80
+          containerPort = "${tonumber(var.port)}",
+          hostPort      = "${tonumber(var.port)}"
         }
       ]
       }])

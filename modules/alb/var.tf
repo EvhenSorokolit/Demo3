@@ -17,3 +17,8 @@ variable "vpc_id" {
   description = "Enter VPC id"
 }
 
+variable "port" {
+    description = "Enter  target port "
+
+  
+}

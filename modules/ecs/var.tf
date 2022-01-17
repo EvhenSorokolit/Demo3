@@ -36,3 +36,11 @@ variable "inst_number" {
   
 }
 
+variable "port" {
+    description = "Enter port of image"
+
+  
+}
+
+
+
