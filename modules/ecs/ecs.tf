@@ -1,4 +1,5 @@
 
+#create claster
 resource "aws_ecs_cluster" "main" {
   name = var.name
 }
@@ -8,8 +9,10 @@ resource "aws_ecs_service" "test"{
     cluster = aws_ecs_cluster.main.arn
     launch_type = "FARGATE"
 
+# rules to destroy  inactive tasks
     deployment_maximum_percent = 200
     deployment_minimum_healthy_percent = 0
+# number of task to start and hold
     desired_count = var.inst_number
     
     task_definition = aws_ecs_task_definition.main.arn
@@ -18,9 +21,9 @@ resource "aws_ecs_service" "test"{
         assign_public_ip = true
         security_groups = [var.ecs_sg_id]
         subnets =var.subnets
-
-      
+     
     }
+#connectiing tasks to  load balancer target group
     load_balancer {
       target_group_arn = var.ecs_tg
       container_name ="first"
@@ -29,6 +32,7 @@ resource "aws_ecs_service" "test"{
 
 }
 
+#createing task definition
 resource "aws_ecs_task_definition" "main" {
  
  
@@ -36,8 +40,9 @@ resource "aws_ecs_task_definition" "main" {
      family = var.name
      network_mode             = "awsvpc"
      requires_compatibilities = ["FARGATE"]
+#execution role for tasks to get acces to ECR and Cloudwatch       
      execution_role_arn = aws_iam_role.role_for_ecs_tasks.arn
-   #  task_role_arn   = aws_iam_role.role_for_ecs_tasks.arn
+  
      cpu         = 256
      memory      = 512
 
@@ -66,6 +71,6 @@ resource "aws_ecs_task_definition" "main" {
       ]
       }])
 
-
-  depends_on=[aws_iam_policy_attachment.attach_for_ecs ] 
+#run after role creation iam role and log group creation
+  depends_on=[aws_iam_policy_attachment.attach_for_ecs, aws_cloudwatch_log_group.cb_log_group ] 
  }

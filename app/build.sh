@@ -1,12 +1,9 @@
 #!/bin/bash
 
 
-echo $region,$reg_id,$tag
+url="$reg_id:$tag"
 
-url=$reg_id.dkr.ecr.$region.amazonaws.com/$app_name:$tag
-
-echo $url
-echo $(aws ecr get-login-password --region $region | docker login --username AWS --password-stdin $reg_id.dkr.ecr.$region.amazonaws.com)
+echo $(aws ecr get-login-password --region $( echo $reg_id| awk -F"." '{print $4}') | docker login --username AWS --password-stdin $(echo $reg_id| grep -o '[^"]*com'))
 
 echo $(docker build  -t $url .)
 

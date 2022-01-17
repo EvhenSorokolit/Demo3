@@ -1,3 +1,5 @@
+# Crating  load balancer
+
 resource "aws_lb" "my_lb" {
   name               = "${var.name}-Lb"
   internal           = false
@@ -9,6 +11,7 @@ resource "aws_lb" "my_lb" {
   
 }
 
+# Crating  Target group
 resource "aws_lb_target_group" "my_tg" {
   name     = "${var.name}-Tg"
   port     = 80
@@ -26,6 +29,8 @@ resource "aws_lb_target_group" "my_tg" {
     matcher             = "200-399"
   }
 }
+
+# Crating Load balancer Listener
 resource "aws_lb_listener" "my_lb_listener" {
     load_balancer_arn = aws_lb.my_lb.arn
     port = 80

@@ -14,7 +14,7 @@ resource "aws_subnet" "public" {
     vpc_id = aws_vpc.main.id
     count = var.Sub_count
     availability_zone = data.aws_availability_zones.available.names[count.index]
-    cidr_block =cidrsubnet(aws_vpc.main.cidr_block, 8, var.Sub_count + count.index)
+    cidr_block =cidrsubnet(aws_vpc.main.cidr_block, 8, 50 + count.index)
     map_public_ip_on_launch = true
     tags = merge(var.common_tags, {Name ="Public_Subnet_for_${data.aws_availability_zones.available.names[count.index]}"})
     

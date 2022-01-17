@@ -1,3 +1,4 @@
 output "url" {
-    value ="${var.reg_id}.dkr.ecr.${var.region}.amazonaws.com/${var.name}:${var.tag}"
+    description = "url for task definition"
+    value ="${var.reg_id}:${var.tag}"
 }
